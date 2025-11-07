@@ -1,26 +1,206 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ========================================
+   1. BASE STYLES & TYPOGRAPHY
+   ======================================== */
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  body {
+    @apply 
+      bg-gradient-to-br 
+      dark:from-gray-900 dark:via-gray-800 dark:to-black
+      text-gray-900 dark:text-gray-100
+      transition-all duration-700 ease-in-out
+      min-h-screen
+      antialiased;
+    font-feature-settings: 'rlig' 1, 'calt' 1, 'liga' 1;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  *:focus-visible {
+    @apply outline-none ring-2 ring-blue-500 ring-offset-2 ring-offset-transparent;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ========================================
+   2. GLASSMORPHISM CARD
+   ======================================== */
+@layer components {
+  .glass-card {
+    @apply 
+      relative overflow-hidden rounded-2xl p-6 md:p-8
+      backdrop-blur-xl
+      bg-white/80 dark:bg-gray-800/70
+      border border-white/20 dark:border-gray-700/50
+      shadow-lg dark:shadow-xl
+      transition-all duration-300 ease-out
+      hover:shadow-xl hover:-translate-y-0.5;
+
+    &::before {
+      content: '';
+      @apply absolute inset-0 -z-10 opacity-60;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 70%);
+    }
+
+    &::after {
+      content: '';
+      @apply absolute inset-0 -z-10 opacity-0 transition-opacity duration-500;
+      background: radial-gradient(
+        circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(255, 255, 255, 0.12) 0%,
+        transparent 60%
+      );
+      pointer-events: none;
+    }
+
+    &:hover::after {
+      @apply opacity-80;
+    }
+  }
+}
+
+/* ========================================
+   3. ANIMATIONS (Simplified & Subtle)
+   ======================================== */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.35); }
+  70% { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0); }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.pulse-glow { animation: pulse-glow 2.5s infinite ease-in-out; }
+
+/* ========================================
+   4. TASK ITEM
+   ======================================== */
+.task-item {
+  @apply 
+    relative overflow-hidden rounded-xl p-4
+    bg-white dark:bg-gray-800
+    border border-gray-200 dark:border-gray-700
+    shadow-sm hover:shadow-md
+    transition-all duration-300 ease-out
+    cursor-grab active:cursor-grabbing;
+
+  animation: slideInUp 0.4s ease-out forwards;
+  animation-delay: calc(0.05s * var(--index, 0));
+}
+
+.task-item .delete-btn {
+  @apply opacity-0 group-hover:opacity-100 transition-opacity duration-200;
+}
+
+.task-item.dragging {
+  @apply 
+    scale-[1.02] shadow-2xl z-50
+    bg-gradient-to-r from-indigo-500 to-purple-600
+    text-white;
+}
+
+.task-item.completed {
+  @apply opacity-70 line-through;
+  background: linear-gradient(to right, transparent 0%, rgba(34, 197, 94, 0.08) 100%);
+}
+
+/* ========================================
+   5. FORM INPUT
+   ======================================== */
+.glow-input .ant-input {
+  @apply 
+    bg-white/70 dark:bg-gray-800/70
+    border-gray-300 dark:border-gray-600
+    backdrop-blur-md
+    transition-all duration-300
+    focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20
+    hover:border-blue-400;
+}
+
+.glow-input .ant-input::placeholder {
+  @apply text-gray-400 dark:text-gray-500;
+}
+
+/* ========================================
+   6. THEME TOGGLE
+   ======================================== */
+.theme-toggle {
+  @apply 
+    relative w-14 h-14 rounded-full
+    bg-gradient-to-r from-blue-500 to-purple-600
+    p-1.5 shadow-lg
+    hover:scale-105 transition-all duration-300
+    flex items-center justify-center
+    pulse-glow
+    cursor-pointer;
+}
+
+/* ========================================
+   7. FILTER TABS
+   ======================================== */
+.ant-segmented {
+  @apply 
+    bg-gray-100 dark:bg-gray-800
+    backdrop-blur-md
+    border border-gray-300 dark:border-gray-700
+    rounded-xl overflow-hidden;
+}
+
+.ant-segmented-item {
+  @apply transition-all duration-300 font-medium;
+}
+
+.ant-segmented-item-selected {
+  @apply 
+    bg-gradient-to-r from-blue-500 to-purple-600 
+    text-white shadow-md;
+}
+
+/* ========================================
+   8. CUSTOM SCROLLBAR
+   ======================================== */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply 
+    bg-gray-300 dark:bg-gray-600 
+    rounded-full
+    hover:bg-gray-400 dark:hover:bg-gray-500
+    transition-colors duration-200;
+}
+
+/* ========================================
+   9. UTILITIES
+   ======================================== */
+@layer utilities {
+  .text-gradient {
+    @apply 
+      bg-gradient-to-r from-blue-600 to-purple-600 
+      bg-clip-text text-transparent 
+      font-semibold;
+  }
+
+  .pulse-glow { animation: pulse-glow 2.5s infinite ease-in-out; }
 }
