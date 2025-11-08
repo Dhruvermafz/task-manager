@@ -22,24 +22,27 @@ const TaskItem = memo(({ task, index }: TaskItemProps) => {
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className={`p-3 rounded-lg bg-white dark:bg-gray-800 shadow-sm border transition-all ${
-            task.completed ? "opacity-60 line-through" : ""
+          className={`flex items-center justify-between px-4 py-3 rounded-md border shadow-sm bg-white dark:bg-gray-800 transition-colors ${
+            task.completed
+              ? "opacity-70 line-through text-gray-500 dark:text-gray-400"
+              : "text-gray-800 dark:text-gray-100"
           }`}
         >
-          <Space>
+          <Space size="middle" className="flex-1">
             <Checkbox
               checked={task.completed}
               onChange={() => toggleTask(task.id)}
             />
-            <span className="flex-1">{task.title}</span>
-            <Button
-              type="text"
-              danger
-              icon={<DeleteOutlined />}
-              onClick={() => deleteTask(task.id)}
-              size="small"
-            />
+            <span className="truncate">{task.title}</span>
           </Space>
+
+          <Button
+            type="text"
+            icon={<DeleteOutlined />}
+            danger
+            size="small"
+            onClick={() => deleteTask(task.id)}
+          />
         </div>
       )}
     </Draggable>

@@ -10,8 +10,9 @@ export default function TaskForm() {
 
   const onFinish = useCallback(
     (values: { title: string }) => {
-      if (values.title.trim()) {
-        addTask(values.title);
+      const title = values.title.trim();
+      if (title) {
+        addTask(title);
         form.resetFields();
       }
     },
@@ -23,17 +24,18 @@ export default function TaskForm() {
       form={form}
       onFinish={onFinish}
       layout="inline"
-      className="mb-6 glow-input"
+      className="mb-6 input-field w-full"
     >
       <Form.Item
         name="title"
-        rules={[{ required: true, message: "Task cannot be empty!" }]}
-        style={{ flex: 1, marginRight: 8 }}
+        rules={[{ required: true, message: "Task cannot be empty." }]}
+        className="flex-1"
       >
-        <Input placeholder="Add a new task..." />
+        <Input placeholder="Add a new task..." className="w-full" allowClear />
       </Form.Item>
-      <Form.Item>
-        <Button type="primary" htmlType="submit">
+
+      <Form.Item noStyle>
+        <Button type="primary" htmlType="submit" className="ml-2">
           Add
         </Button>
       </Form.Item>

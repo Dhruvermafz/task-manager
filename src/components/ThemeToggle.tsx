@@ -10,21 +10,22 @@ export default function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => setMounted(true), []);
-
   if (!mounted) return null;
+
+  const isDark = theme === "dark";
 
   return (
     <Button
       type="text"
-      className="theme-toggle pulse-glow"
+      className="theme-toggle"
       icon={
-        theme === "dark" ? (
-          <Sun className="w-5 h-5" />
+        isDark ? (
+          <Sun className="w-5 h-5 text-gray-200" />
         ) : (
-          <Moon className="w-5 h-5" />
+          <Moon className="w-5 h-5 text-gray-700" />
         )
       }
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      onClick={() => setTheme(isDark ? "light" : "dark")}
     />
   );
 }
